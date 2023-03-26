@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<h1>Stream de datos</h1>
+<div id="avg">
+
+</div>
+<div id="main">
+
+</div>
+<script language = "JavaScript" >
+  const sse = new EventSource("/sse")
+
+  const main = document.getElementById("main")
+
+  const avg = document.getElementById("avg")
+
+  sse.addEventListener("update", (evt) => {
+    const data = JSON.parse(evt.data)
+    let div = document.getElementById(data.id)
+    if(div === null){
+      div = document.createElement("div")
+      div.setAttribute("id",data.id)
+      main.appendChild(div)
+    }
+    div.innerHTML = `Info <strong> ${data.temp.toFixed(2)} </strong> (<em>${data.id}</em>)`
+  })
+  sse.addEventListener("average", (evt) => {
+    const data = JSON.parse(evt.data)
+    avg.innerText = `Average =   ${data.average.toFixed(2)}`
+  })
+</script>
+</body>
+</html>
